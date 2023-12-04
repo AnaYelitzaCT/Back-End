@@ -1,75 +1,69 @@
 package org.mascotitas.mascotitas.service;
 
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import org.mascotitas.mascotitas.model.Cliente;
+import org.mascotitas.mascotitas.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
 @Service
 public class ClienteService {
-	public final ArrayList<Cliente> lista = new ArrayList<Cliente>();
+	private final ClienteRepository clienteRepository;
 	@Autowired 
-	public ClienteService() { 
-		lista.add(new Cliente("Tania Cardenas","tania@gmail.com",
-				"tania123","2451233456"));
-		lista.add(new Cliente("Ana Campos","ana@gmail.com",
-				"ana1234","2321678987"));
-		lista.add(new Cliente("Yelitza Tapia","yeli@gmail.com",
-				"yeli123","2541265678"));
-		lista.add(new Cliente("Amanda Terecuerdo","amanda@gmail.com",
-				"amanda12","8934602214"));
-		lista.add(new Cliente("Pedro Perez","pedro@gmail.com",
-				"pedro123","8134569909"));
-	}//clienteservice
-	public ArrayList<Cliente> getAllClientes() {
-		
-		return lista;
+	public ClienteService(ClienteRepository clienteRepository) {
+		this.clienteRepository = clienteRepository;
+	}//constructor
+	public List<Cliente> getAllClientes() {
+		return clienteRepository.findAll();
 	}//getAllClientes
 	
 	public Cliente getCliente(long id) {
-		Cliente clien=null;
-		for (Cliente cliente : lista) {
-			if(id == cliente.getId()) {
-				clien=cliente;
-				break;
-			}//If
-		}//foreach
-		return clien;
-	}//getCliente
+		return clienteRepository.findById(id).orElseThrow(
+				()-> new IllegalArgumentException("El Producto con el id [" +id
+						+ "] no existe")
+				);
+			}//getcliente
 	
 	public Cliente deleteCliente(long id) {
 		Cliente clien=null;
-		for (Cliente cliente : lista) {
-			if(id == cliente.getId()) {
-				clien=cliente;
-				lista.remove(cliente);
-				break;
-			}//If
-		}//foreach
+		if (clienteRepository.existsById(id)) {
+			clien = clienteRepository.findById(id).get();
+			clienteRepository.deleteById(id);
+		}//if existById
 		return clien;
-	}//delete producto
+	}//delete cliente
+	
+	@PostMapping
 	public Cliente addCliente(Cliente cliente) {
-		lista.add(cliente);
-		return cliente;
-	}//add producto
+		//TODO: validación 
+				Optional<Cliente> tmpProd = clienteRepository.findByNombre(cliente.getNombre());
+				
+				if (tmpProd.isEmpty()) { 
+				return clienteRepository.save(cliente);
+				} else {
+					System.out.println("Ya existe el producto con el nombre [" +
+									cliente.getNombre() + "]");
+					return null;
+				}// else
+				}//add cliente
 	
 	public Cliente updateCliente(long id, String nombre, String email, String contraseña, String telefono) {
 		
 		Cliente clien=null;
-			for (Cliente cliente : lista) {
-				if(id == cliente.getId()) {
-						if(nombre!= null)cliente.setNombre(nombre);
-						if(email!= null)cliente.setEmail(email);
-						if(contraseña!= null)cliente.setContraseña(contraseña);
-						if(telefono!= null)cliente.setTelefono(telefono);
-						clien=cliente;
-						break;
-				}//if
-			}//foreach
+		if (clienteRepository.existsById(id)) {
+			clien = clienteRepository.findById(id).get();
+						if(nombre!= null)clien.setNombre(nombre);
+						if(email!= null)clien.setEmail(email);
+						if(contraseña!= null)clien.setContraseña(contraseña);
+						if(telefono!= null)clien.setTelefono(telefono);
+						clienteRepository.save(clien);
+				}//existById
 			return clien;
-} //constructor
-}//ProductoService
+		}//updateCliente
 
+}//Class 
 	
 	
 	

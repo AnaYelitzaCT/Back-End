@@ -1,63 +1,62 @@
 package org.mascotitas.mascotitas.service;
 
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import org.mascotitas.mascotitas.model.Categoria;
+import org.mascotitas.mascotitas.repository.CategoriaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 @Service
 public class CategoriaService {
-	public final ArrayList<Categoria> lista = new ArrayList<Categoria>();
+	private final CategoriaRepository categoriaRepository;
+	
 	@Autowired
-	public CategoriaService() {                      //constructor vacio, para agregar productos con los datos establecidos anteriormente
-		lista.add(new Categoria("Alimento"));
-		lista.add(new Categoria("Juguetes"));
-		lista.add(new Categoria("Ropa"));
-		lista.add(new Categoria("Otros"));
-
+	public CategoriaService(CategoriaRepository categoriaRepository) {
+		this.categoriaRepository = categoriaRepository;
 	}//constructor
 	
-		public ArrayList<Categoria> getAllCategorias() {
-			
-			return lista;
-		}//getAllCategoria
+		public List<Categoria> getAllCategorias() {
+			return categoriaRepository.findAll();    
+		}//getAllProductos
 		
 		public Categoria getCategoria(long id) {
-			Categoria cat=null;
-			for (Categoria categoria : lista) {
-				if(id == categoria.getId()) {
-					cat=categoria;
-					break;
-				}//If
-			}//foreach
-			return cat;
-		}//getProducto
+			return categoriaRepository.findById(id).orElseThrow(
+					()-> new IllegalArgumentException("El Producto con el id [" +id
+							+ "] no existe")
+					);
+				}//getCategoria
 		
 		public Categoria deleteCategoria(long id) {
 			Categoria cat=null;
-			for (Categoria categoria : lista) {
-				if(id == categoria.getId()) {
-					cat=categoria;
-					lista.remove(categoria);
-					break;
-				}//If
-			}//foreach
+			if (categoriaRepository.existsById(id)) {
+				cat = categoriaRepository.findById(id).get();
+				categoriaRepository.deleteById(id);
+			}//if existById
 			return cat;
-		}//delete Categoria
+		}//deleteCategoria
+		
 		public Categoria addCategoria(Categoria categoria) {
-			lista.add(categoria);
-			return categoria;
-		}//add categoria
+			//TODO: validación 
+			Optional<Categoria> tmpProd = categoriaRepository.findByCategoria(categoria.getCategoria());
+			
+			if (tmpProd.isEmpty()) { 
+			return categoriaRepository.save(categoria);
+			} else {
+				System.out.println("Ya existe el producto con el nombre [" +
+								categoria.getCategoria() + "]");
+				return null;
+			}// else
+			}//addCategoria
 		
 		public Categoria updateCategoria(long id, String categoria) {
 			Categoria cat=null;
-				for (Categoria cate : lista) {
-					if(id == cate.getId()) {
-						if(categoria!= null)cate.setCategoria(categoria);
-							cat=cate;
-							break;
-					}//if
-				}//foreach
+			if (categoriaRepository.existsById(id)) {
+				cat = categoriaRepository.findById(id).get();
+							if(categoria!= null)cat.setCategoria(categoria);
+							categoriaRepository.save(cat);
+					}//existById
 				return cat;
-		}
-		}
+			}//updateCategoria
+
+	}//Class ProductoService

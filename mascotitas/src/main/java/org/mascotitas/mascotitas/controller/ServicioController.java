@@ -1,6 +1,6 @@
 package org.mascotitas.mascotitas.controller;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.mascotitas.mascotitas.model.Servicio;
 import org.mascotitas.mascotitas.service.ServicioService;
@@ -20,28 +20,29 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path="/api/servicios/") // http://localhost:8080/api/servicios/
 public class ServicioController {
+	
 	private final ServicioService servicioService;
 	@Autowired
 	public ServicioController(ServicioService servicioService) {
 		this.servicioService = servicioService;
 	}//constructor
 	@GetMapping	
-	public ArrayList<Servicio> getAllServicios(){
+	public List<Servicio> getAllServicios(){
 		return servicioService.getAllServicios();
 	}//getAllServicio 
 	
 	@GetMapping(path="{servId}")    //http://localhost:8080/api/productos/1
-	public Servicio getServicio(@PathVariable ("servId") long id){            //esta instrucción trae el valor que se le ponga arriba en el URL
+	public Servicio getServicio(@PathVariable ("servId") long id){          
 		return servicioService.getServicio(id);
 	}//getAllServicio
 	
 	@DeleteMapping(path="{servId}")    //http://localhost:8080/api/productos/1
-	public Servicio deleteProducto(@PathVariable ("servId") long id){            //esta instrucción trae el valor que se le ponga arriba en el URL
+	public Servicio deleteProducto(@PathVariable ("servId") long id){            
 		return servicioService.deleteServicio (id);
 	}//getAllServicio 
 	
 	@PostMapping   //http://localhost:8080/api/productos/
-	public Servicio  addServicio (@RequestBody Servicio servicio ){            //esta instrucción trae el valor que se le ponga arriba en el URL
+	public Servicio  addServicio (@RequestBody Servicio servicio ){            
 		return servicioService.addServicio(servicio );
 	}//addServicio 
 	
@@ -50,9 +51,9 @@ public class ServicioController {
 	public Servicio  updateServicio (@PathVariable ("servId") long id,
 			@RequestParam(required=false) String nombre,
 			@RequestParam(required=false) String descripcion,
-			@RequestParam(required=false) String imagen,
-			@RequestParam(required=false) Double precio){            //esta instrucción modifica el valor que se le ponga arriba en el URL
-		return servicioService.updateServicio(id,nombre, descripcion, imagen, precio);
+			@RequestParam(required=false) String image,
+			@RequestParam(required=false) Double precio){            
+		return servicioService.updateServicio(id,nombre, descripcion, image, precio);
 	}//updateProducto
 	
 }//Class ProductoController

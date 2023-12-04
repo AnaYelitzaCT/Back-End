@@ -1,6 +1,6 @@
 package org.mascotitas.mascotitas.controller;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.mascotitas.mascotitas.model.Categoria;
 import org.mascotitas.mascotitas.service.CategoriaService;
@@ -26,29 +26,29 @@ public class CategoriaController {
 		this.categoriaService = categoriaService;
 	}//constructor
 	@GetMapping	
-	public ArrayList<Categoria> getAllCategorias(){
+	public List<Categoria> getAllCategorias(){
 		return categoriaService.getAllCategorias();
 	}//getAllCategoria
 	
 	@GetMapping(path="{catId}")    //http://localhost:8080/api/productos/1
-	public Categoria getCategoria(@PathVariable ("catId") long id){            //esta instrucción trae el valor que se le ponga arriba en el URL
+	public Categoria getCategoria(@PathVariable ("catId") long id){            
 		return categoriaService.getCategoria(id);
 	}//getAllgetCategoria
 	
 	@DeleteMapping(path="{catId}")    //http://localhost:8080/api/productos/1
-	public Categoria deleteCategoria(@PathVariable ("catId") long id){            //esta instrucción trae el valor que se le ponga arriba en el URL
+	public Categoria deleteCategoria(@PathVariable ("catId") long id){           
 		return categoriaService.deleteCategoria(id);
 	}//getAllProducto
 	
 	@PostMapping   //http://localhost:8080/api/productos/
-	public Categoria addCategoria(@RequestBody Categoria categoria){            //esta instrucción trae el valor que se le ponga arriba en el URL
+	public Categoria addCategoria(@RequestBody Categoria categoria){            
 		return categoriaService.addCategoria(categoria);
 	}//addCategoria
 	
 
 	@PutMapping(path="{catId}")    //http://localhost:8080/api/productos/1?precio=55.80&imagen=bic40.jpg
 	public Categoria updateCategoria(@PathVariable ("catId") long id,
-			@RequestParam(required=false) String categoria){            //esta instrucción modifica el valor que se le ponga arriba en el URL
+			@RequestParam(required=false) String categoria){            
 		return categoriaService.updateCategoria(id, categoria);
 	}//updateCategoria
 	

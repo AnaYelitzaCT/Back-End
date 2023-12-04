@@ -1,21 +1,32 @@
 package org.mascotitas.mascotitas.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
+//POJO PLan Old Java Object
+@Entity
+@Table(name="categoria")
 public class Categoria {
+	@Id 
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="id", unique = true, nullable = false)
 	private Long id;
+	@Column(nullable = false)
 	private String categoria;
 	
-	private static long total=0;
+
 
 	public Categoria(String categoria) {
 		this.categoria = categoria;
-		Categoria.total++;
-		this.id = total;
+;
 	}//constructor
 	public Categoria() {
-		Categoria.total++;
-		this.id = total;
 	}//const
+	
 	public String getCategoria() {
 		return categoria;
 	}

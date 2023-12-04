@@ -1,68 +1,68 @@
 package org.mascotitas.mascotitas.service;
 
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 
 import org.mascotitas.mascotitas.model.Servicio;
+import org.mascotitas.mascotitas.repository.ServicioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
 @Service
 public class ServicioService {
-	public final ArrayList<Servicio> lista = new ArrayList<Servicio>();
+	private final ServicioRepository servicioRepository;
 	@Autowired    
-	public ServicioService() {  
-		lista.add(new Servicio("Paseo a perros","Duración 30 min/incluye evidencia fotográfica o video","paseo.jpg", 150.00));
 
-		lista.add(new Servicio("Aseo de mascotas","baño para perros y gatos",
-							"baño.jpg", 300.00));
-
-		lista.add(new Servicio("Hospedaje para mascotas","Incluye hospedaje, alimentación e hidratación",
-							"hospedaje.jpg", 200.00));
+		public ServicioService(ServicioRepository servicioRepository) {
+			this.servicioRepository = servicioRepository;
 	}//servicioService
-	public ArrayList<Servicio> getAllServicios() {
-		
-		return lista;
+	public List<Servicio> getAllServicios() {
+		return servicioRepository.findAll();  
 	}//getAllServicios
 	
 	public Servicio getServicio(long id) {
-		Servicio serv=null;
-		for (Servicio servicio : lista) {
-			if(id == servicio.getId()) {
-				serv=servicio;
-				break;
-			}//If
-		}//foreach
-		return serv;
-	}//getservicio
+		return servicioRepository.findById(id).orElseThrow(
+				()-> new IllegalArgumentException("El Producto con el id [" +id
+						+ "] no existe")
+				);
+			}//getServicio
 	
 	public Servicio deleteServicio(long id) {
 		Servicio serv=null;
-		for (Servicio servicio : lista) {
-			if(id == servicio.getId()) {
-				serv=servicio;
-				lista.remove(servicio);
-				break;
-			}//If
-		}//foreach
+		if (servicioRepository.existsById(id)) {
+			serv = servicioRepository.findById(id).get();
+			servicioRepository.deleteById(id);
+		}//if existById
 		return serv;
-	}//delete Servicio
-	public Servicio addServicio(Servicio servicio) {
-		lista.add(servicio);
-		return servicio;
-	}//add Servicio
+	}//delete servicio
 	
-	public Servicio updateServicio(long id,String nombre, String descripcion, String imagen, Double precio) {
+	@PostMapping
+	public Servicio addServicio(Servicio servicio) {
+		//TODO: validación 
+				Optional<Servicio> tmpProd = servicioRepository.findByNombre(servicio.getNombre());
+				
+				if (tmpProd.isEmpty()) { //no se encuentra el producto con ese nombre
+				return servicioRepository.save(servicio);
+				} else {
+					System.out.println("Ya existe el producto con el nombre [" +
+									servicio.getNombre() + "]");
+					return null;
+				}// else
+				}//add servicio
+	
+	public Servicio updateServicio(long id,String nombre, String descripcion, String image, Double precio) {
 		
 		Servicio serv=null;
-			for (Servicio servicio : lista) {
-				if(id == servicio.getId()) {
-						if(nombre!= null)servicio.setNombre(nombre);
-						if(descripcion!= null)servicio.setDescripcion(descripcion);
-						if(imagen!= null)servicio.setImage(imagen);
-						if(precio!= null)servicio.setPrecio(precio);
-						serv=servicio;
-						break;
+		if (servicioRepository.existsById(id)) {
+			serv = servicioRepository.findById(id).get();
+						if(nombre!= null)serv.setNombre(nombre);
+						if(descripcion!= null)serv.setDescripcion(descripcion);
+						if(image!= null)serv.setImage(image);
+						if(precio!= null)serv.setPrecio(precio);
+						servicioRepository.save(serv);
+						
 				}//if
-			}//foreach
 			return serv;
 } //constructor
 }//servicioService

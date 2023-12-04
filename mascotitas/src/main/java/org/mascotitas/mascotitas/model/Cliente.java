@@ -1,26 +1,34 @@
 package org.mascotitas.mascotitas.model;
 
-public class Cliente {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
+//POJO PLan Old Java Object
+@Entity
+@Table(name="clientes")
+public class Cliente {
+	@Id 
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="id", unique = true, nullable = false)
 	private Long id;
+	@Column(nullable = false)
 	private String nombre;
 	private String email;
+	@Column(nullable = false)
 	private String contraseña;
 	private String telefono;
 	
-	private static long total=0;
-
 	public Cliente(String nombre, String email, String contraseña, String telefono) {
 		this.nombre = nombre;
 		this.email = email;
 		this.contraseña = contraseña;
 		this.telefono = telefono;
-		Cliente.total++;
-		this.id = total;
 	}//constructor
 		public Cliente() {
-			Cliente.total++;
-			this.id = total;
 		}//constructorProducto
 		public String getNombre() {
 			return nombre;

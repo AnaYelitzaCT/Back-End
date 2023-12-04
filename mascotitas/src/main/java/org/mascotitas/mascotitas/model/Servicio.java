@@ -1,26 +1,36 @@
 package org.mascotitas.mascotitas.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="servicios")
 public class Servicio {
+	@Id 
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="id", unique = true, nullable = false)
 	private Long id;
+	@Column(nullable = false)
 	private String nombre;
+	@Column(nullable = false)
 	private String descripcion;
 	private String image;
 	private Double precio;
 	
-	private static long total=0;
 
 	public Servicio(String nombre, String descripcion, String image, Double precio) {
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.image = image;
 		this.precio = precio;
-		Servicio.total++;
-		this.id = total;
 	}//constructor
 	public Servicio() {
-		Servicio.total++;
-		this.id = total;
 	}//servicio
+	
 	public String getNombre() {
 		return nombre;
 	}

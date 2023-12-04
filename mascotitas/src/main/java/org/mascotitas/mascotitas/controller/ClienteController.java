@@ -1,6 +1,6 @@
 package org.mascotitas.mascotitas.controller;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.mascotitas.mascotitas.model.Cliente;
 import org.mascotitas.mascotitas.service.ClienteService;
@@ -26,22 +26,22 @@ public class ClienteController {
 		this.clienteService = clienteService;
 	}//constructor
 	@GetMapping	
-	public ArrayList<Cliente> getAllClientes(){
+	public List<Cliente> getAllClientes(){
 		return clienteService.getAllClientes();
 	}//getAllcliente
 	
-	@GetMapping(path="{clienId}")    //http://localhost:8080/api/productos/1
-	public Cliente getCliente(@PathVariable ("cliendId") long id){            //esta instrucción trae el valor que se le ponga arriba en el URL
+	@GetMapping(path="{clienId}")    
+	public Cliente getCliente(@PathVariable ("cliendId") long id){            
 		return clienteService.getCliente(id);
 	}//getAllcliente
 	
-	@DeleteMapping(path="{clienId}")    //http://localhost:8080/api/productos/1
-	public Cliente deleteCliente(@PathVariable ("clienId") long id){            //esta instrucción trae el valor que se le ponga arriba en el URL
+	@DeleteMapping(path="{clienId}")    
+	public Cliente deleteCliente(@PathVariable ("clienId") long id){            
 		return clienteService.deleteCliente(id);
 	}//getAllProducto
 	
 	@PostMapping   //http://localhost:8080/api/productos/
-	public Cliente addCliente(@RequestBody Cliente cliente){            //esta instrucción trae el valor que se le ponga arriba en el URL
+	public Cliente addCliente(@RequestBody Cliente cliente){            
 		return clienteService.addCliente(cliente);
 	}//addCliente
 	
